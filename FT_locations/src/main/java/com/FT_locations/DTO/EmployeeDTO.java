@@ -1,5 +1,5 @@
 package com.FT_locations.DTO;
 
-public record Employee(
+public record EmployeeDTO(
     int id
 ){}

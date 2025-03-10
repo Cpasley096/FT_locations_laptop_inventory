@@ -6,10 +6,12 @@ import com.FT_locations.DTO.LaptopDTO;
 import com.FT_locations.Models.*;
 import com.FT_locations.Repositories.EmployeeRepo;
 import com.FT_locations.Repositories.LaptopRepo;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,20 @@ public class LaptopService {
             sort = sort.ascending();
         }
 
+        if (args.status() != null) return laptopRepo.findByStatus(args.status(), sort);
         return laptopRepo.findAll(sort);
+    }
+
+    public void exportLaptopsToCsv(Args args, HttpServletResponse response) throws IOException {
+        List<Laptop> laptops = getLaptops(args);
+
+        if ("csv".equalsIgnoreCase(args.format())) {
+            CsvExporter.exportCsv(response, laptops);
+
+//            response.sendRedirect("/export-success");
+        } else {
+            throw new IllegalArgumentException("Invalid format. Use 'csv'.");
+        }
     }
 
     public Laptop getLaptop(int id) {
@@ -46,22 +61,22 @@ public class LaptopService {
         laptop.setLastRepairedAt(laptopDTO.lastRepairedAt());
 
         Hardware hardware = new Hardware();
-        hardware.setCpu(laptopDTO.hardwareCreate().cpu());
-        hardware.setGpu(laptopDTO.hardwareCreate().gpu());
-        hardware.setRam(laptopDTO.hardwareCreate().ram());
-        hardware.setStorageCapacity(laptopDTO.hardwareCreate().storageCapacity());
-        hardware.setScreenSize(laptopDTO.hardwareCreate().screenSize());
+        hardware.setCpu(laptopDTO.hardwareDTO().cpu());
+        hardware.setGpu(laptopDTO.hardwareDTO().gpu());
+        hardware.setRam(laptopDTO.hardwareDTO().ram());
+        hardware.setStorageCapacity(laptopDTO.hardwareDTO().storageCapacity());
+        hardware.setScreenSize(laptopDTO.hardwareDTO().screenSize());
 
         laptop.setHardware(hardware);
 
         Software software = new Software();
-        software.setOs(laptopDTO.softwareCreate().os());
-        software.setFirmwareVersion(laptopDTO.softwareCreate().firmwareVersion());
-        software.setFirmwareUpdatedAt(laptopDTO.softwareCreate().firmwareUpdatedAt());
+        software.setOs(laptopDTO.softwareDTO().os());
+        software.setFirmwareVersion(laptopDTO.softwareDTO().firmwareVersion());
+        software.setFirmwareUpdatedAt(laptopDTO.softwareDTO().firmwareUpdatedAt());
 
         laptop.setSoftware(software);
 
-        Employee employee = employeeRepo.findById(laptopDTO.employee().id())
+        Employee employee = employeeRepo.findById(laptopDTO.employeeDTO().id())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         laptop.setEmployee(employee);
 
@@ -80,20 +95,20 @@ public class LaptopService {
             laptop.setLastRepairedAt(laptopDTO.lastRepairedAt());
         }
 
-        if (laptopDTO.softwareCreate().os() != null) {
-            laptop.getSoftware().setOs(laptopDTO.softwareCreate().os());
+        if (laptopDTO.softwareDTO().os() != null) {
+            laptop.getSoftware().setOs(laptopDTO.softwareDTO().os());
         }
 
-        if (laptopDTO.softwareCreate().firmwareVersion() != null) {
-            laptop.getSoftware().setFirmwareVersion(laptopDTO.softwareCreate().firmwareVersion());
+        if (laptopDTO.softwareDTO().firmwareVersion() != null) {
+            laptop.getSoftware().setFirmwareVersion(laptopDTO.softwareDTO().firmwareVersion());
         }
 
-        if (laptopDTO.softwareCreate().firmwareUpdatedAt() != null) {
-            laptop.getSoftware().setFirmwareUpdatedAt(laptopDTO.softwareCreate().firmwareUpdatedAt());
+        if (laptopDTO.softwareDTO().firmwareUpdatedAt() != null) {
+            laptop.getSoftware().setFirmwareUpdatedAt(laptopDTO.softwareDTO().firmwareUpdatedAt());
         }
 
-        if (laptopDTO.employee() != null && laptopDTO.employee().id() != 0) {
-            Employee employee = employeeRepo.findById(laptopDTO.employee().id())
+        if (laptopDTO.employeeDTO() != null && laptopDTO.employeeDTO().id() != 0) {
+            Employee employee = employeeRepo.findById(laptopDTO.employeeDTO().id())
                     .orElseThrow(() -> new RuntimeException("Employee not found"));
             laptop.setEmployee(employee);
         }

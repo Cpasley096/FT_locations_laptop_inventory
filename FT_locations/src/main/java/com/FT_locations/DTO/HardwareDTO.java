@@ -1,6 +1,6 @@
 package com.FT_locations.DTO;
 
-public record HardwareCreate(
+public record HardwareDTO(
     String cpu,
     int ram,
     int storageCapacity,

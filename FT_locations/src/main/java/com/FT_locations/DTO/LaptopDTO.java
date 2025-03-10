@@ -12,7 +12,7 @@ public record LaptopDTO(
         LocalDate lastRepairedAt,
         Status status,
         int employeeId,
-        HardwareCreate hardwareCreate,
-        SoftwareCreate softwareCreate,
-        Employee employee
+        HardwareDTO hardwareDTO,
+        SoftwareDTO softwareDTO,
+        EmployeeDTO employeeDTO
 ) {}
