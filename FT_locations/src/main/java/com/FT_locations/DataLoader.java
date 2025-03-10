@@ -106,7 +106,7 @@ public class DataLoader implements CommandLineRunner {
         Laptop laptop3 = new Laptop(
                 "Apple",
                 "MacBook Pro",
-                Status.INACTIVE,
+                Status.AVAILABLE,
                 LocalDate.now(),
                 2499.99f,
                 null,

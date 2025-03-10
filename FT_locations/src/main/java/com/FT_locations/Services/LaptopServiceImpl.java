@@ -4,8 +4,9 @@ import com.FT_locations.Models.Laptop;
 import com.FT_locations.DTO.LaptopDTO;
 
 import com.FT_locations.Models.*;
-import com.FT_locations.Repositories.EmployeeRepo;
 import com.FT_locations.Repositories.LaptopRepo;
+import com.FT_locations.Services.iServices.EmployeeService;
+import com.FT_locations.Services.iServices.LaptopService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,11 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LaptopService {
+public class LaptopServiceImpl implements LaptopService {
     @Autowired
     private LaptopRepo laptopRepo;
     @Autowired
-    private EmployeeRepo employeeRepo;
+    private EmployeeService employeeService;
     public List<Laptop> getLaptops(Args args) {
         Sort sort = Sort.by(Sort.Order.by(args.orderBy()));
 
@@ -76,9 +77,13 @@ public class LaptopService {
 
         laptop.setSoftware(software);
 
-        Employee employee = employeeRepo.findById(laptopDTO.employeeDTO().id())
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-        laptop.setEmployee(employee);
+        if (laptopDTO.employeeDTO() != null && laptopDTO.employeeDTO().id() > 0) {
+            Employee employee = employeeService.getEmployee(laptopDTO.employeeDTO().id());
+            if (employee == null) {
+                throw new RuntimeException("Employee not found");
+            }
+            laptop.setEmployee(employee);
+        }
 
         return laptopRepo.save(laptop);
     }
@@ -107,9 +112,11 @@ public class LaptopService {
             laptop.getSoftware().setFirmwareUpdatedAt(laptopDTO.softwareDTO().firmwareUpdatedAt());
         }
 
-        if (laptopDTO.employeeDTO() != null && laptopDTO.employeeDTO().id() != 0) {
-            Employee employee = employeeRepo.findById(laptopDTO.employeeDTO().id())
-                    .orElseThrow(() -> new RuntimeException("Employee not found"));
+        if (laptopDTO.employeeDTO() != null && laptopDTO.employeeDTO().id() > 0) {
+            Employee employee = employeeService.getEmployee(laptopDTO.employeeDTO().id());
+            if (employee == null) {
+                throw new RuntimeException("Employee not found");
+            }
             laptop.setEmployee(employee);
         }
 

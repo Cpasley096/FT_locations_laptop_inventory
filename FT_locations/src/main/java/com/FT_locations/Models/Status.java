@@ -8,11 +8,11 @@ import java.util.List;
 public enum Status {
     Decommissioned,
     ACTIVE,
-    INACTIVE,
+    AVAILABLE,
     REPAIRING;
 
     public static String[] names() {
-        return new String[] { "ACTIVE","INACTIVE", "DECOMMISSIONED", "REPAIRING" };
+        return new String[] { "ACTIVE","AVAILABLE", "DECOMMISSIONED", "REPAIRING" };
     }
     public static String getAllowedStatuses() {
         return String.join(", ", List.of(Status.values()).toString());

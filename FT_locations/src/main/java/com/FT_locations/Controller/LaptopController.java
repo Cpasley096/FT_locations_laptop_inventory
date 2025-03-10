@@ -4,13 +4,12 @@ import com.FT_locations.DTO.LaptopDTO;
 import com.FT_locations.Models.Laptop;
 import com.FT_locations.Models.Args;
 import com.FT_locations.Models.Status;
-import com.FT_locations.Services.LaptopService;
+import com.FT_locations.Services.iServices.LaptopService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;

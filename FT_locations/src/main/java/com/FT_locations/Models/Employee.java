@@ -18,6 +18,7 @@ public class Employee {
     private int id;
     private String firstName;
     private String lastName;
+    @JsonIgnore
     private String email;
     private String department;
 

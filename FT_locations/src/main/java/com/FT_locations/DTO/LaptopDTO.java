@@ -11,7 +11,6 @@ public record LaptopDTO(
         float price,
         LocalDate lastRepairedAt,
         Status status,
-        int employeeId,
         HardwareDTO hardwareDTO,
         SoftwareDTO softwareDTO,
         EmployeeDTO employeeDTO
