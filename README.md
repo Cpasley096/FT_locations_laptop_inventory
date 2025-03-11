@@ -54,3 +54,14 @@
    ```
    http://localhost:8080
    ```
+# Installation Mac
+1) git clone https://github.com/Cpasley096/FT_locations_test.git
+2) cd into FT_locations (Must be in directory that has the pom.xml file)
+3) Install Java SDK 11+
+4) Install Maven using Homebrew:
+   - Run `brew install maven` in the terminal.
+5) After installation, verify Maven and Java installations:
+   - Run `java -version` and `mvn -v` to verify installation.
+6) Run `mvn clean install` (this will download dependencies and build the project)
+7) Run `mvn spring-boot:run` (application will run on port 8080)
+8) Open http://localhost:8080/ in your browser
