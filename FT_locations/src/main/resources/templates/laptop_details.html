@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Laptop Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Laptop Details</h1>
+
+    <!-- Laptop Information Table -->
+    <table class="table table-bordered mb-4">
+        <tbody>
+        <tr>
+            <td><strong>Brand:</strong></td>
+            <td th:text="${laptop.brand}"></td>
+        </tr>
+        <tr>
+            <td><strong>Model:</strong></td>
+            <td th:text="${laptop.model}"></td>
+        </tr>
+        <tr>
+            <td><strong>Status:</strong></td>
+            <td th:text="${laptop.status}"></td>
+        </tr>
+        <tr>
+            <td><strong>Purchased Date:</strong></td>
+            <td th:text="${laptop.purchasedAt}"></td>
+        </tr>
+        <tr>
+            <td><strong>Price:</strong></td>
+            <td>&euro;<span th:text="${laptop.price}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Last Repaired At:</strong></td>
+            <td th:text="${laptop.lastRepairedAt}"></td>
+        </tr>
+        <tr>
+            <td><strong>Assigned to:</strong></td>
+            <td th:text="${laptop.employee != null ? laptop.employee.fullName : 'No employee'}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Hardware Specifications Table -->
+    <h2>Hardware Specifications</h2>
+    <table class="table table-bordered mb-4" th:if="${laptop.hardware != null}">
+        <tbody>
+        <tr>
+            <td><strong>CPU:</strong></td>
+            <td th:text="${laptop.hardware.cpu}"></td>
+        </tr>
+        <tr>
+            <td><strong>GPU:</strong></td>
+            <td th:text="${laptop.hardware.gpu}"></td>
+        </tr>
+        <tr>
+            <td><strong>RAM:</strong></td>
+            <td th:text="${laptop.hardware.ram}+ 'GB'"></td>
+        </tr>
+        <tr>
+            <td><strong>Storage Capacity:</strong></td>
+            <td th:text="${laptop.hardware.storageCapacity}+ 'GB'"></td>
+        </tr>
+        <tr>
+            <td><strong>Screen Size:</strong></td>
+            <td th:text="${laptop.hardware.screenSize}+ ' inches'"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Software Specifications Table -->
+    <h2>Software Specifications</h2>
+    <table class="table table-bordered mb-4" th:if="${laptop.software != null}">
+        <tbody>
+        <tr>
+            <td><strong>OS:</strong></td>
+            <td th:text="${laptop.software.os}"></td>
+        </tr>
+        <tr>
+            <td><strong>Firmware Version:</strong></td>
+            <td th:text="${laptop.software.firmwareVersion}"></td>
+        </tr>
+        <tr>
+            <td><strong>Firmware Updated At:</strong></td>
+            <td th:text="${laptop.software.firmwareUpdatedAt}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Decommission Laptop Button -->
+    <div th:if="${laptop.status != T(com.FT_locations.Models.Status).DECOMMISSIONED}">
+        <form th:action="@{/laptops/decommission/{id}(id=${laptop.id})}" th:method="patch">
+            <button type="submit" class="btn btn-danger">De-commission Laptop</button>
+        </form>
+    </div>
+
+    <!-- Back to Laptop List Link -->
+    <a href="/laptops" class="btn btn-secondary mt-3">Back to Laptops List</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

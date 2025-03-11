@@ -100,14 +100,6 @@ public class LaptopServiceImpl implements LaptopService {
             laptop.setLastRepairedAt(laptopDTO.lastRepairedAt());
         }
 
-        if (laptopDTO.softwareDTO().os() != null) {
-            laptop.getSoftware().setOs(laptopDTO.softwareDTO().os());
-        }
-
-        if (laptopDTO.softwareDTO().firmwareVersion() != null) {
-            laptop.getSoftware().setFirmwareVersion(laptopDTO.softwareDTO().firmwareVersion());
-        }
-
         if (laptopDTO.softwareDTO().firmwareUpdatedAt() != null) {
             laptop.getSoftware().setFirmwareUpdatedAt(laptopDTO.softwareDTO().firmwareUpdatedAt());
         }
@@ -126,7 +118,7 @@ public class LaptopServiceImpl implements LaptopService {
     public Laptop decommissionLaptop(int id) {
         Laptop laptop = laptopRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Laptop not found"));
-        laptop.setStatus(Status.Decommissioned);
+        laptop.setStatus(Status.DECOMMISSIONED);
 
         laptop.setEmployee(null);
         return laptopRepo.save(laptop);

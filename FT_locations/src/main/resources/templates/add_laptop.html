@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Laptop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-4">Add a New Laptop</h2>
+
+    <form th:action="@{/laptops/save}" th:object="${laptopForm}" method="post">
+        <!-- Laptop Basic Details -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="brand" class="form-label">Brand:</label>
+                <input id="brand" type="text" th:field="*{brand}" class="form-control" required/>
+            </div>
+
+            <div class="col-md-6">
+                <label for="model" class="form-label">Model:</label>
+                <input id="model" type="text" th:field="*{model}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="purchasedAt" class="form-label">Purchased At:</label>
+                <input id="purchasedAt" type="date" th:field="*{purchasedAt}" class="form-control" required/>
+            </div>
+
+            <div class="col-md-6">
+                <label for="price" class="form-label">Price:</label>
+                <input id="price" type="number" th:field="*{price}" class="form-control" step="0.01" required/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="lastRepairedAt" class="form-label">Last Repaired At:</label>
+                <input id="lastRepairedAt" type="date" th:field="*{lastRepairedAt}" class="form-control"/>
+            </div>
+
+            <div class="col-md-6">
+                <label for="status" class="form-label">Status:</label>
+                <select id="status" th:field="*{status}" class="form-select">
+                    <option value="AVAILABLE">Available</option>
+                    <option value="ASSIGNED">Assigned</option>
+                    <option value="REPAIRING">Repairing</option>
+                    <option value="DECOMMISSIONED">De-commissioned</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Hardware Section -->
+        <h3 class="mt-4">Hardware</h3>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="cpu" class="form-label">CPU:</label>
+                <input id="cpu" type="text" th:field="*{cpu}" class="form-control" required/>
+            </div>
+
+            <div class="col-md-6">
+                <label for="ram" class="form-label">RAM (GB):</label>
+                <select id="ram" th:field="*{ram}" class="form-select" required>
+                    <option value="4">4 GB</option>
+                    <option value="8">8 GB</option>
+                    <option value="16">16 GB</option>
+                    <option value="32">32 GB</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="storageCapacity" class="form-label">Storage Capacity (GB):</label>
+                <select id="storageCapacity" th:field="*{storageCapacity}" class="form-select" required>
+                    <option value="256">256 GB</option>
+                    <option value="512">512 GB</option>
+                    <option value="1024">1 TB</option>
+                    <option value="2048">2 TB</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="gpu" class="form-label">GPU:</label>
+                <input id="gpu" type="text" th:field="*{gpu}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="screenSize" class="form-label">Screen Size (inches):</label>
+                <select id="screenSize" th:field="*{screenSize}" class="form-select" required>
+                    <option value="13">13 inches</option>
+                    <option value="15">15 inches</option>
+                    <option value="17">17 inches</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Software Section -->
+        <h3 class="mt-4">Software</h3>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="os" class="form-label">Operating System:</label>
+                <input id="os" type="text" th:field="*{os}" class="form-control" required/>
+            </div>
+
+            <div class="col-md-6">
+                <label for="firmwareVersion" class="form-label">Firmware Version:</label>
+                <input id="firmwareVersion" type="text" th:field="*{firmwareVersion}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="firmwareUpdatedAt" class="form-label">Firmware Updated At:</label>
+                <input id="firmwareUpdatedAt" type="date" th:field="*{firmwareUpdatedAt}" class="form-control"/>
+            </div>
+        </div>
+
+        <!-- Assigned Employee -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="employeeId" class="form-label">Assigned Employee:</label>
+                <select id="employeeId" th:field="*{employeeId}" class="form-select" required>
+                    <option value="0">Unassigned</option>
+                    <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.fullName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Save Laptop</button>
+    </form>
+
+    <a href="/laptops" class="btn btn-secondary mt-3">Back to Laptops List</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

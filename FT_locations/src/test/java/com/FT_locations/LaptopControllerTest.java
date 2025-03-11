@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,58 +54,48 @@ class LaptopControllerTest {
 
         when(laptopService.getLaptop(1)).thenReturn(laptop);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/laptops/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value("Dell"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/laptops/1"))
+                .andExpect(status().isOk())  // Expect HTTP 200 OK
+                .andExpect(MockMvcResultMatchers.view().name("laptop_details"))  // Expect Thymeleaf view
+                .andExpect(MockMvcResultMatchers.model().attributeExists("laptop"))  // Ensure model has 'laptop' attribute
+                .andExpect(MockMvcResultMatchers.model().attribute("laptop", laptop));  // Check model attribute
     }
+
 
     @Test
     void testCreateLaptop() throws Exception {
-        LaptopDTO laptopDTO = new LaptopDTO("Dell", "XPS 15", null, 1500,null , Status.AVAILABLE, null, null, null);
         Laptop laptop = new Laptop();
         laptop.setId(1);
-        laptop.setBrand(laptopDTO.brand());
-        laptop.setModel(laptopDTO.model());
+        laptop.setBrand("Dell");
+        laptop.setModel("XPS 15");
+        laptop.setStatus(Status.AVAILABLE);
 
-        when(laptopService.createLaptop(laptopDTO)).thenReturn(laptop);
+        // Mock service to return a non-null laptop with an ID
+        when(laptopService.createLaptop(any(LaptopDTO.class))).thenReturn(laptop);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/laptops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(laptopDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value("Dell"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.model").value("XPS 15"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/laptops/save")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("brand", "Dell")
+                        .param("model", "XPS 15")
+                        .param("price", "1500")
+                        .param("status", "AVAILABLE"))
+                .andExpect(status().is3xxRedirection()) // Expect redirect
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1")); // Ensure correct redirection
     }
 
-    @Test
-    void testUpdateLaptop() throws Exception {
-        LaptopDTO laptopDTO = new LaptopDTO("Dell", "XPS 15", null, 1500,null , Status.REPAIRING, null, null, null);
-        Laptop updatedLaptop = new Laptop();
-        updatedLaptop.setId(1);
-        updatedLaptop.setBrand("Dell");
-        updatedLaptop.setStatus(Status.REPAIRING);
-
-        when(laptopService.updateLaptop(1, laptopDTO)).thenReturn(updatedLaptop);
-
-        mockMvc.perform(MockMvcRequestBuilders.patch("/laptops/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(laptopDTO)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("REPAIRING"));
-    }
 
     @Test
     void testDecommissionLaptop() throws Exception {
         Laptop laptop = new Laptop();
         laptop.setId(1);
-        laptop.setStatus(Status.Decommissioned);
+        laptop.setStatus(Status.DECOMMISSIONED);
 
         when(laptopService.decommissionLaptop(1)).thenReturn(laptop);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/laptops/decommission/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("Decommissioned"));
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1"));
     }
+
 }

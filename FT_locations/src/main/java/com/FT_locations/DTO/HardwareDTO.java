@@ -5,6 +5,5 @@ public record HardwareDTO(
     int ram,
     int storageCapacity,
     String gpu,
-    float screenSize,
-    int laptopId
+    float screenSize
 ) {}

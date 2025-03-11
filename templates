@@ -1,0 +1,495 @@
+warning: in the working copy of 'FT_locations/.idea/inspectionProfiles/Project_Default.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'FT_locations/pom.xml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/FT_locations/.idea/inspectionProfiles/Project_Default.xml b/FT_locations/.idea/inspectionProfiles/Project_Default.xml[m
+[1mindex 5b2ec72..19a3548 100644[m
+[1m--- a/FT_locations/.idea/inspectionProfiles/Project_Default.xml[m
+[1m+++ b/FT_locations/.idea/inspectionProfiles/Project_Default.xml[m
+[36m@@ -2,7 +2,18 @@[m
+   <profile version="1.0">[m
+     <option name="myName" value="Project Default" />[m
+     <inspection_tool class="ExtractMethodRecommender" enabled="true" level="WARNING" enabled_by_default="true">[m
+[31m-      <option name="minLength" value="506" />[m
+[32m+[m[32m      <option name="minLength" value="577" />[m
+[32m+[m[32m      <option name="maxParameters" value="2" />[m
+[32m+[m[32m    </inspection_tool>[m
+[32m+[m[32m    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">[m
+[32m+[m[32m      <option name="myValues">[m
+[32m+[m[32m        <value>[m
+[32m+[m[32m          <list size="1">[m
+[32m+[m[32m            <item index="0" class="java.lang.String" itemvalue="th:text" />[m
+[32m+[m[32m          </list>[m
+[32m+[m[32m        </value>[m
+[32m+[m[32m      </option>[m
+[32m+[m[32m      <option name="myCustomValuesEnabled" value="true" />[m
+     </inspection_tool>[m
+   </profile>[m
+ </component>[m
+\ No newline at end of file[m
+[1mdiff --git a/FT_locations/pom.xml b/FT_locations/pom.xml[m
+[1mindex edf4ed9..94a38d7 100644[m
+[1m--- a/FT_locations/pom.xml[m
+[1m+++ b/FT_locations/pom.xml[m
+[36m@@ -83,6 +83,12 @@[m
+             <artifactId>spring-boot-starter-test</artifactId>[m
+             <scope>test</scope>[m
+         </dependency>[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.springframework.boot</groupId>[m
+[32m+[m[32m            <artifactId>spring-boot-starter-thymeleaf</artifactId>[m
+[32m+[m[32m            <version>3.4.3</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+     </dependencies>[m
+ [m
+ </project>[m
+\ No newline at end of file[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Controller/LaptopController.java b/FT_locations/src/main/java/com/FT_locations/Controller/LaptopController.java[m
+[1mindex ece2a2a..4641df0 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Controller/LaptopController.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Controller/LaptopController.java[m
+[36m@@ -1,36 +1,65 @@[m
+ package com.FT_locations.Controller;[m
+ [m
+[31m-import com.FT_locations.DTO.LaptopDTO;[m
+[32m+[m[32mimport com.FT_locations.DTO.*;[m
+[32m+[m[32mimport com.FT_locations.Models.Employee;[m
+ import com.FT_locations.Models.Laptop;[m
+ import com.FT_locations.Models.Args;[m
+ import com.FT_locations.Models.Status;[m
+[32m+[m[32mimport com.FT_locations.Services.iServices.EmployeeService;[m
+ import com.FT_locations.Services.iServices.LaptopService;[m
+ import jakarta.servlet.http.HttpServletResponse;[m
+ import org.springframework.beans.factory.annotation.Autowired;[m
+[31m-import org.springframework.http.HttpStatus;[m
+[31m-import org.springframework.http.ResponseEntity;[m
+[32m+[m[32mimport org.springframework.stereotype.Controller;[m
+[32m+[m[32mimport org.springframework.ui.Model;[m
+ import org.springframework.web.bind.annotation.*;[m
+[32m+[m[32mimport org.springframework.web.servlet.mvc.support.RedirectAttributes;[m
+ [m
+ import java.io.IOException;[m
+ import java.util.List;[m
+[31m-@RestController[m
+[32m+[m[32m@Controller[m
+ @RequestMapping("/laptops")[m
+ public class LaptopController {[m
+     @Autowired[m
+     private LaptopService laptopService;[m
+[32m+[m
+[32m+[m[32m    @Autowired[m
+[32m+[m[32m    private EmployeeService employeeService;[m
+     @GetMapping({"/", ""})[m
+[31m-    List<Laptop> listLaptops(@RequestParam(name = "orderBy", required = false) String orderBy,[m
+[31m-                                                     @RequestParam(name = "orderMode", required = false) String orderMode,[m
+[31m-                             @RequestParam(name = "status", required = false) String statusStr) {[m
+[32m+[m[32m    public String listLaptops(@RequestParam(name = "orderBy", required = false) String orderBy,[m
+[32m+[m[32m                             @RequestParam(name = "orderMode", required = false) String orderMode,[m
+[32m+[m[32m                             @RequestParam(name = "status", required = false) String statusStr, Model model) {[m
+ [m
+         Status status = Status.fromString(statusStr);[m
+ [m
+         Args args = new Args(orderBy, orderMode, status, null);[m
+ [m
+[31m-        return laptopService.getLaptops(args);[m
+[32m+[m[32m        List<Laptop> laptops = laptopService.getLaptops(args);[m
+[32m+[m[32m        model.addAttribute("laptops", laptops);[m
+[32m+[m[32m        return "index";[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    @GetMapping("/{id}")[m
+[32m+[m[32m    String getLaptop(@PathVariable("id") int id, Model model) {[m
+[32m+[m[32m        Laptop laptop = laptopService.getLaptop(id);[m
+[32m+[m[32m        model.addAttribute("laptop", laptop);[m
+[32m+[m[32m        return "laptop_details";[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    @GetMapping("/newLaptop")[m
+[32m+[m[32m    public String showLaptopForm(Model model) {[m
+[32m+[m[32m        List<Employee> employees = employeeService.getEmployees();[m
+[32m+[m[32m        System.out.println(employees.toString());[m
+[32m+[m[32m        model.addAttribute("employees", employees);[m
+[32m+[m[32m        model.addAttribute("laptopForm", new LaptopFormDTO());[m
+[32m+[m[32m        return "add_laptop";[m
+     }[m
+     @GetMapping({"/export"})[m
+[31m-    public void exportLaptops([m
+[32m+[m[32m    public String exportPage(){[m
+[32m+[m[32m        return "export_laptops";[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    @GetMapping({"/export/download"})[m
+[32m+[m[32m    public String exportLaptops([m
+             @RequestParam(name = "orderBy", required = false) String orderBy,[m
+             @RequestParam(name = "orderMode", required = false) String orderMode,[m
+             @RequestParam(name = "status", required = false) String statusStr,[m
+[36m@@ -42,28 +71,55 @@[m [mpublic class LaptopController {[m
+         Args args = new Args(orderBy, orderMode, status, format);[m
+ [m
+         laptopService.exportLaptopsToCsv(args, response);[m
+[32m+[m[32m        return "redirect:/";[m
+     }[m
+ [m
+[31m-    @GetMapping("/{id}")[m
+[31m-    Laptop getLaptop(@PathVariable("id") int id) {[m
+[31m-        return laptopService.getLaptop(id);[m
+[31m-    }[m
+[32m+[m[32m    @PostMapping({"/save"})[m
+[32m+[m[32m    public String createLaptop(@ModelAttribute LaptopFormDTO laptopFormDTO){[m
+[32m+[m[32m        System.out.println(laptopFormDTO.toString());[m
+ [m
+[31m-    @PostMapping({"/", ""})[m
+[31m-    public ResponseEntity<Laptop> createLaptop(@RequestBody LaptopDTO laptopDTO){[m
+[31m-        Laptop laptop = laptopService.createLaptop(laptopDTO);[m
+[31m-        return ResponseEntity.status(HttpStatus.CREATED).body(laptop);[m
+[31m-    }[m
+[32m+[m[32m        HardwareDTO hardwareDTO = new HardwareDTO([m
+[32m+[m[32m                laptopFormDTO.getCpu(),[m
+[32m+[m[32m                laptopFormDTO.getRam(),[m
+[32m+[m[32m                laptopFormDTO.getStorageCapacity(),[m
+[32m+[m[32m                laptopFormDTO.getGpu(),[m
+[32m+[m[32m                laptopFormDTO.getScreenSize()[m
+[32m+[m[32m        );[m
+[32m+[m
+[32m+[m[32m        SoftwareDTO softwareDTO = new SoftwareDTO([m
+[32m+[m[32m                laptopFormDTO.getOs(),[m
+[32m+[m[32m                laptopFormDTO.getFirmwareVersion(),[m
+[32m+[m[32m                laptopFormDTO.getFirmwareUpdatedAt()[m
+[32m+[m[32m        );[m
+[32m+[m
+[32m+[m[32m        EmployeeDTO employeeDTO = null;[m
+[32m+[m[32m        if (laptopFormDTO.getEmployeeId() != 0) {[m
+[32m+[m[32m            employeeDTO = new EmployeeDTO(laptopFormDTO.getEmployeeId());[m
+[32m+[m[32m        }[m
+ [m
+[31m-    @PatchMapping({"/{id}"})[m
+[31m-    public ResponseEntity<Laptop> updateLaptop(@PathVariable("id") int id, @RequestBody LaptopDTO laptopDTO) {[m
+[31m-        Laptop laptop = laptopService.updateLaptop(id, laptopDTO);[m
+[31m-        return ResponseEntity.status(HttpStatus.OK).body(laptop);[m
+[32m+[m[32m        LaptopDTO laptopDTO = new LaptopDTO([m
+[32m+[m[32m                laptopFormDTO.getBrand(),[m
+[32m+[m[32m                laptopFormDTO.getModel(),[m
+[32m+[m[32m                laptopFormDTO.getPurchasedAt(),[m
+[32m+[m[32m                laptopFormDTO.getPrice(),[m
+[32m+[m[32m                laptopFormDTO.getLastRepairedAt(),[m
+[32m+[m[32m                laptopFormDTO.getStatus(),[m
+[32m+[m[32m                hardwareDTO,[m
+[32m+[m[32m                softwareDTO,[m
+[32m+[m[32m                employeeDTO[m
+[32m+[m
+[32m+[m[32m        );[m
+[32m+[m
+[32m+[m[32m        Laptop laptop = laptopService.createLaptop(laptopDTO);[m
+[32m+[m[32m        return "redirect:/laptops/" + laptop.getId();[m
+     }[m
+ [m
+[31m-    @PatchMapping({"/decommission/{id}"})[m
+[31m-    public ResponseEntity<Laptop> decommissionLaptop(@PathVariable("id") int id) {[m
+[32m+[m[32m    @PatchMapping("/decommission/{id}")[m
+[32m+[m[32m    public String decommissionLaptop(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {[m
+         Laptop laptop = laptopService.decommissionLaptop(id);[m
+[31m-        return ResponseEntity.status(HttpStatus.OK).body(laptop);[m
+[32m+[m
+[32m+[m[32m        redirectAttributes.addFlashAttribute("laptop", laptop);[m
+[32m+[m
+[32m+[m[32m        return "redirect:/laptops/" + id;[m
+     }[m
+ }[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/DTO/HardwareDTO.java b/FT_locations/src/main/java/com/FT_locations/DTO/HardwareDTO.java[m
+[1mindex a87580a..033451f 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/DTO/HardwareDTO.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/DTO/HardwareDTO.java[m
+[36m@@ -5,6 +5,5 @@[m [mpublic record HardwareDTO([m
+     int ram,[m
+     int storageCapacity,[m
+     String gpu,[m
+[31m-    float screenSize,[m
+[31m-    int laptopId[m
+[32m+[m[32m    float screenSize[m
+ ) {}[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/DTO/SoftwareDTO.java b/FT_locations/src/main/java/com/FT_locations/DTO/SoftwareDTO.java[m
+[1mindex 9c034ad..edd5004 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/DTO/SoftwareDTO.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/DTO/SoftwareDTO.java[m
+[36m@@ -5,6 +5,5 @@[m [mimport java.time.LocalDate;[m
+ public record SoftwareDTO([m
+         String os,[m
+         String firmwareVersion,[m
+[31m-        LocalDate firmwareUpdatedAt,[m
+[31m-        int laptopId[m
+[32m+[m[32m        LocalDate firmwareUpdatedAt[m
+ ) {}[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/DataLoader.java b/FT_locations/src/main/java/com/FT_locations/DataLoader.java[m
+[1mindex 0c537c1..0e90f63 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/DataLoader.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/DataLoader.java[m
+[36m@@ -82,7 +82,7 @@[m [mpublic class DataLoader implements CommandLineRunner {[m
+         Laptop laptop1 = new Laptop([m
+                 "Dell",[m
+                 "Inspiron 15",[m
+[31m-                Status.ACTIVE,[m
+[32m+[m[32m                Status.ASSIGNED,[m
+                 LocalDate.now(),[m
+                 899.99f,[m
+                null ,[m
+[36m@@ -94,13 +94,13 @@[m [mpublic class DataLoader implements CommandLineRunner {[m
+         Laptop laptop2 = new Laptop([m
+                 "HP",[m
+                 "Pavilion 17",[m
+[31m-                Status.ACTIVE,[m
+[32m+[m[32m                Status.DECOMMISSIONED,[m
+                 LocalDate.now(),[m
+                 1199.99f,[m
+                 null,[m
+                 hardware2,[m
+                 software2,[m
+[31m-                employee2[m
+[32m+[m[32m                null[m
+         );[m
+ [m
+         Laptop laptop3 = new Laptop([m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Models/Employee.java b/FT_locations/src/main/java/com/FT_locations/Models/Employee.java[m
+[1mindex 8966606..d778c2d 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Models/Employee.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Models/Employee.java[m
+[36m@@ -36,4 +36,15 @@[m [mpublic class Employee {[m
+     public String getFullName() {[m
+         return this.getFirstName() + " " + this.getLastName();[m
+     }[m
+[32m+[m
+[32m+[m[32m    @Override[m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[32m        return "Employee{" +[m
+[32m+[m[32m                "id=" + id +[m
+[32m+[m[32m                ", firstName='" + firstName + '\'' +[m
+[32m+[m[32m                ", lastName='" + lastName + '\'' +[m
+[32m+[m[32m                ", department='" + department + '\'' +[m
+[32m+[m[32m                '}';[m
+[32m+[m[32m    }[m
+[32m+[m
+ }[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Models/Hardware.java b/FT_locations/src/main/java/com/FT_locations/Models/Hardware.java[m
+[1mindex 41d8fe4..7f39693 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Models/Hardware.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Models/Hardware.java[m
+[36m@@ -31,4 +31,18 @@[m [mpublic class Hardware {[m
+         this.storageCapacity = storageCapacity;[m
+         this.screenSize = screenSize;[m
+     }[m
+[32m+[m
+[32m+[m[32m    @Override[m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[32m        return "Hardware{" +[m
+[32m+[m[32m                "id=" + id +[m
+[32m+[m[32m                ", cpu='" + cpu + '\'' +[m
+[32m+[m[32m                ", gpu='" + gpu + '\'' +[m
+[32m+[m[32m                ", ram=" + ram +[m
+[32m+[m[32m                ", storageCapacity=" + storageCapacity +[m
+[32m+[m[32m                ", screenSize=" + screenSize +[m
+[32m+[m[32m                '}';[m
+[32m+[m[32m    }[m
+ }[m
+[41m+[m
+[41m+[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Models/Laptop.java b/FT_locations/src/main/java/com/FT_locations/Models/Laptop.java[m
+[1mindex f9ba028..5756a27 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Models/Laptop.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Models/Laptop.java[m
+[36m@@ -45,4 +45,22 @@[m [mpublic class Laptop {[m
+         this.software = software;[m
+         this.employee = employee;[m
+     }[m
+[32m+[m
+[32m+[m[32m    @Override[m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[32m        return "Laptop{" +[m
+[32m+[m[32m                "id=" + id +[m
+[32m+[m[32m                ", brand='" + brand + '\'' +[m
+[32m+[m[32m                ", model='" + model + '\'' +[m
+[32m+[m[32m                ", status=" + status +[m
+[32m+[m[32m                ", purchasedAt=" + purchasedAt +[m
+[32m+[m[32m                ", price=" + price +[m
+[32m+[m[32m                ", lastRepairedAt=" + lastRepairedAt +[m
+[32m+[m[32m                ", hardware=" + (hardware != null ? hardware.getId() : "null") +[m
+[32m+[m[32m                ", software=" + (software != null ? software.getId() : "null") +[m
+[32m+[m[32m                ", employee={" + (employee != null ? employee.getId() + ", " + employee.getFullName() : "null") + "}" +[m
+[32m+[m[32m                '}';[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m
+ }[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Models/Software.java b/FT_locations/src/main/java/com/FT_locations/Models/Software.java[m
+[1mindex f040ff3..3a65291 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Models/Software.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Models/Software.java[m
+[36m@@ -29,4 +29,15 @@[m [mpublic class Software {[m
+         this.firmwareVersion = firmwareVersion;[m
+         this.firmwareUpdatedAt = firmwareUpdatedAt;[m
+     }[m
+[32m+[m
+[32m+[m[32m    @Override[m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[32m        return "Software{" +[m
+[32m+[m[32m                "id=" + id +[m
+[32m+[m[32m                ", os='" + os + '\'' +[m
+[32m+[m[32m                ", firmwareVersion='" + firmwareVersion + '\'' +[m
+[32m+[m[32m                ", firmwareUpdatedAt=" + firmwareUpdatedAt +[m
+[32m+[m[32m                '}';[m
+[32m+[m[32m    }[m
+[32m+[m
+ }[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Models/Status.java b/FT_locations/src/main/java/com/FT_locations/Models/Status.java[m
+[1mindex 24dbee8..de1b923 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Models/Status.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Models/Status.java[m
+[36m@@ -6,13 +6,13 @@[m [mimport org.springframework.web.server.ResponseStatusException;[m
+ import java.util.List;[m
+ [m
+ public enum Status {[m
+[31m-    Decommissioned,[m
+[31m-    ACTIVE,[m
+[32m+[m[32m    DECOMMISSIONED,[m
+[32m+[m[32m    ASSIGNED,[m
+     AVAILABLE,[m
+     REPAIRING;[m
+ [m
+     public static String[] names() {[m
+[31m-        return new String[] { "ACTIVE","AVAILABLE", "DECOMMISSIONED", "REPAIRING" };[m
+[32m+[m[32m        return new String[] { "ASSIGNED","AVAILABLE", "DECOMMISSIONED", "REPAIRING" };[m
+     }[m
+     public static String getAllowedStatuses() {[m
+         return String.join(", ", List.of(Status.values()).toString());[m
+[1mdiff --git a/FT_locations/src/main/java/com/FT_locations/Services/LaptopServiceImpl.java b/FT_locations/src/main/java/com/FT_locations/Services/LaptopServiceImpl.java[m
+[1mindex d649031..82360d2 100644[m
+[1m--- a/FT_locations/src/main/java/com/FT_locations/Services/LaptopServiceImpl.java[m
+[1m+++ b/FT_locations/src/main/java/com/FT_locations/Services/LaptopServiceImpl.java[m
+[36m@@ -100,14 +100,6 @@[m [mpublic class LaptopServiceImpl implements LaptopService {[m
+             laptop.setLastRepairedAt(laptopDTO.lastRepairedAt());[m
+         }[m
+ [m
+[31m-        if (laptopDTO.softwareDTO().os() != null) {[m
+[31m-            laptop.getSoftware().setOs(laptopDTO.softwareDTO().os());[m
+[31m-        }[m
+[31m-[m
+[31m-        if (laptopDTO.softwareDTO().firmwareVersion() != null) {[m
+[31m-            laptop.getSoftware().setFirmwareVersion(laptopDTO.softwareDTO().firmwareVersion());[m
+[31m-        }[m
+[31m-[m
+         if (laptopDTO.softwareDTO().firmwareUpdatedAt() != null) {[m
+             laptop.getSoftware().setFirmwareUpdatedAt(laptopDTO.softwareDTO().firmwareUpdatedAt());[m
+         }[m
+[36m@@ -126,7 +118,7 @@[m [mpublic class LaptopServiceImpl implements LaptopService {[m
+     public Laptop decommissionLaptop(int id) {[m
+         Laptop laptop = laptopRepo.findById(id)[m
+                 .orElseThrow(() -> new RuntimeException("Laptop not found"));[m
+[31m-        laptop.setStatus(Status.Decommissioned);[m
+[32m+[m[32m        laptop.setStatus(Status.DECOMMISSIONED);[m
+ [m
+         laptop.setEmployee(null);[m
+         return laptopRepo.save(laptop);[m
+[1mdiff --git a/FT_locations/src/main/resources/application-dev.properties b/FT_locations/src/main/resources/application-dev.properties[m
+[1mindex 911ebdc..9df516e 100644[m
+[1m--- a/FT_locations/src/main/resources/application-dev.properties[m
+[1m+++ b/FT_locations/src/main/resources/application-dev.properties[m
+[36m@@ -14,3 +14,5 @@[m [mspring.h2.console.path=/h2-console[m
+ [m
+ # Spring Boot Server Configuration[m
+ server.port=8080[m
+[32m+[m
+[32m+[m[32mspring.mvc.hiddenmethod.filter.enabled=true[m
+[1mdiff --git a/FT_locations/src/test/java/com/FT_locations/LaptopControllerTest.java b/FT_locations/src/test/java/com/FT_locations/LaptopControllerTest.java[m
+[1mindex 5216922..1532e7d 100644[m
+[1m--- a/FT_locations/src/test/java/com/FT_locations/LaptopControllerTest.java[m
+[1m+++ b/FT_locations/src/test/java/com/FT_locations/LaptopControllerTest.java[m
+[36m@@ -19,6 +19,7 @@[m [mimport org.springframework.test.web.servlet.result.MockMvcResultMatchers;[m
+ [m
+ import java.util.Collections;[m
+ [m
+[32m+[m[32mimport static org.mockito.ArgumentMatchers.any;[m
+ import static org.mockito.Mockito.when;[m
+ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;[m
+ [m
+[36m@@ -53,58 +54,48 @@[m [mclass LaptopControllerTest {[m
+ [m
+         when(laptopService.getLaptop(1)).thenReturn(laptop);[m
+ [m
+[31m-        mockMvc.perform(MockMvcRequestBuilders.get("/laptops/1")[m
+[31m-                        .contentType(MediaType.APPLICATION_JSON))[m
+[31m-                .andExpect(status().isOk())[m
+[31m-                .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value("Dell"));[m
+[32m+[m[32m        mockMvc.perform(MockMvcRequestBuilders.get("/laptops/1"))[m
+[32m+[m[32m                .andExpect(status().isOk())  // Expect HTTP 200 OK[m
+[32m+[m[32m                .andExpect(MockMvcResultMatchers.view().name("laptop_details"))  // Expect Thymeleaf view[m
+[32m+[m[32m                .andExpect(MockMvcResultMatchers.model().attributeExists("laptop"))  // Ensure model has 'laptop' attribute[m
+[32m+[m[32m                .andExpect(MockMvcResultMatchers.model().attribute("laptop", laptop));  // Check model attribute[m
+     }[m
+ [m
+[32m+[m
+     @Test[m
+     void testCreateLaptop() throws Exception {[m
+[31m-        LaptopDTO laptopDTO = new LaptopDTO("Dell", "XPS 15", null, 1500,null , Status.AVAILABLE, null, null, null);[m
+         Laptop laptop = new Laptop();[m
+         laptop.setId(1);[m
+[31m-        laptop.setBrand(laptopDTO.brand());[m
+[31m-        laptop.setModel(laptopDTO.model());[m
+[31m-[m
+[31m-        when(laptopService.createLaptop(laptopDTO)).thenReturn(laptop);[m
+[31m-[m
+[31m-        mockMvc.perform(MockMvcRequestBuilders.post("/laptops")[m
+[31m-                        .contentType(MediaType.APPLICATION_JSON)[m
+[31m-                        .content(objectMapper.writeValueAsString(laptopDTO)))[m
+[31m-                .andExpect(status().isCreated())[m
+[31m-                .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value("Dell"))[m
+[31m-                .andExpect(MockMvcResultMatchers.jsonPath("$.model").value("XPS 15"));[m
+[32m+[m[32m        laptop.setBrand("Dell");[m
+[32m+[m[32m        laptop.setModel("XPS 15");[m
+[32m+[m[32m        laptop.setStatus(Status.AVAILABLE);[m
+[32m+[m
+[32m+[m[32m        // Mock service to return a non-null laptop with an ID[m
+[32m+[m[32m        when(laptopService.createLaptop(any(LaptopDTO.class))).thenReturn(laptop);[m
+[32m+[m
+[32m+[m[32m        mockMvc.perform(MockMvcRequestBuilders.post("/laptops/save")[m
+[32m+[m[32m                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)[m
+[32m+[m[32m                        .param("brand", "Dell")[m
+[32m+[m[32m                        .param("model", "XPS 15")[m
+[32m+[m[32m                        .param("price", "1500")[m
+[32m+[m[32m                        .param("status", "AVAILABLE"))[m
+[32m+[m[32m                .andExpect(status().is3xxRedirection()) // Expect redirect[m
+[32m+[m[32m                .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1")); // Ensure correct redirection[m
+     }[m
+ [m
+[31m-    @Test[m
+[31m-    void testUpdateLaptop() throws Exception {[m
+[31m-        LaptopDTO laptopDTO = new LaptopDTO("Dell", "XPS 15", null, 1500,null , Status.REPAIRING, null, null, null);[m
+[31m-        Laptop updatedLaptop = new Laptop();[m
+[31m-        updatedLaptop.setId(1);[m
+[31m-        updatedLaptop.setBrand("Dell");[m
+[31m-        updatedLaptop.setStatus(Status.REPAIRING);[m
+[31m-[m
+[31m-        when(laptopService.updateLaptop(1, laptopDTO)).thenReturn(updatedLaptop);[m
+[31m-[m
+[31m-        mockMvc.perform(MockMvcRequestBuilders.patch("/laptops/1")[m
+[31m-                        .contentType(MediaType.APPLICATION_JSON)[m
+[31m-                        .content(objectMapper.writeValueAsString(laptopDTO)))[m
+[31m-                .andExpect(status().isOk())[m
+[31m-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("REPAIRING"));[m
+[31m-    }[m
+ [m
+     @Test[m
+     void testDecommissionLaptop() throws Exception {[m
+         Laptop laptop = new Laptop();[m
+         laptop.setId(1);[m
+[31m-        laptop.setStatus(Status.Decommissioned);[m
+[32m+[m[32m        laptop.setStatus(Status.DECOMMISSIONED);[m
+ [m
+         when(laptopService.decommissionLaptop(1)).thenReturn(laptop);[m
+ [m
+         mockMvc.perform(MockMvcRequestBuilders.patch("/laptops/decommission/1")[m
+[31m-                        .contentType(MediaType.APPLICATION_JSON))[m
+[31m-                .andExpect(status().isOk())[m
+[31m-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("Decommissioned"));[m
+[32m+[m[32m                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))[m
+[32m+[m[32m                .andExpect(status().is3xxRedirection())[m
+[32m+[m[32m                .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1"));[m
+     }[m
+[32m+[m
+ }[m

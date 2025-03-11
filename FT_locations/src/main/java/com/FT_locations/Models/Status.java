@@ -6,13 +6,13 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 public enum Status {
-    Decommissioned,
-    ACTIVE,
+    DECOMMISSIONED,
+    ASSIGNED,
     AVAILABLE,
     REPAIRING;
 
     public static String[] names() {
-        return new String[] { "ACTIVE","AVAILABLE", "DECOMMISSIONED", "REPAIRING" };
+        return new String[] { "ASSIGNED","AVAILABLE", "DECOMMISSIONED", "REPAIRING" };
     }
     public static String getAllowedStatuses() {
         return String.join(", ", List.of(Status.values()).toString());

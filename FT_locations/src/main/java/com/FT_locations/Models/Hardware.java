@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString(exclude = "laptop")
 public class Hardware {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,3 +34,5 @@ public class Hardware {
         this.screenSize = screenSize;
     }
 }
+
+

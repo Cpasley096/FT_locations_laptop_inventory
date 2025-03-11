@@ -82,7 +82,7 @@ public class DataLoader implements CommandLineRunner {
         Laptop laptop1 = new Laptop(
                 "Dell",
                 "Inspiron 15",
-                Status.ACTIVE,
+                Status.ASSIGNED,
                 LocalDate.now(),
                 899.99f,
                null ,
@@ -94,13 +94,13 @@ public class DataLoader implements CommandLineRunner {
         Laptop laptop2 = new Laptop(
                 "HP",
                 "Pavilion 17",
-                Status.ACTIVE,
+                Status.DECOMMISSIONED,
                 LocalDate.now(),
                 1199.99f,
                 null,
                 hardware2,
                 software2,
-                employee2
+                null
         );
 
         Laptop laptop3 = new Laptop(
