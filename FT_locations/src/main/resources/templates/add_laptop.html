@@ -12,24 +12,24 @@
         <!-- Laptop Basic Details -->
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="brand" class="form-label">Brand:</label>
+                <label for="brand" class="form-label">Brand: <span class="text-danger">*</span></label>
                 <input id="brand" type="text" th:field="*{brand}" class="form-control" required/>
             </div>
 
             <div class="col-md-6">
-                <label for="model" class="form-label">Model:</label>
+                <label for="model" class="form-label">Model: <span class="text-danger">*</span></label>
                 <input id="model" type="text" th:field="*{model}" class="form-control" required/>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="purchasedAt" class="form-label">Purchased At:</label>
+                <label for="purchasedAt" class="form-label">Purchased At: <span class="text-danger">*</span></label>
                 <input id="purchasedAt" type="date" th:field="*{purchasedAt}" class="form-control" required/>
             </div>
 
             <div class="col-md-6">
-                <label for="price" class="form-label">Price:</label>
+                <label for="price" class="form-label">Price: <span class="text-danger">*</span></label>
                 <input id="price" type="number" th:field="*{price}" class="form-control" step="0.01" required/>
             </div>
         </div>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="status" class="form-label">Status:</label>
+                <label for="status" class="form-label">Status: <span class="text-danger">*</span></label>
                 <select id="status" th:field="*{status}" class="form-select">
                     <option value="AVAILABLE">Available</option>
                     <option value="ASSIGNED">Assigned</option>
@@ -55,12 +55,12 @@
         <h3 class="mt-4">Hardware</h3>
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="cpu" class="form-label">CPU:</label>
+                <label for="cpu" class="form-label">CPU: <span class="text-danger">*</span></label>
                 <input id="cpu" type="text" th:field="*{cpu}" class="form-control" required/>
             </div>
 
             <div class="col-md-6">
-                <label for="ram" class="form-label">RAM (GB):</label>
+                <label for="ram" class="form-label">RAM (GB): <span class="text-danger">*</span></label>
                 <select id="ram" th:field="*{ram}" class="form-select" required>
                     <option value="4">4 GB</option>
                     <option value="8">8 GB</option>
@@ -72,7 +72,7 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="storageCapacity" class="form-label">Storage Capacity (GB):</label>
+                <label for="storageCapacity" class="form-label">Storage Capacity (GB): <span class="text-danger">*</span></label>
                 <select id="storageCapacity" th:field="*{storageCapacity}" class="form-select" required>
                     <option value="256">256 GB</option>
                     <option value="512">512 GB</option>
@@ -82,14 +82,14 @@
             </div>
 
             <div class="col-md-6">
-                <label for="gpu" class="form-label">GPU:</label>
+                <label for="gpu" class="form-label">GPU: <span class="text-danger">*</span></label>
                 <input id="gpu" type="text" th:field="*{gpu}" class="form-control" required/>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="screenSize" class="form-label">Screen Size (inches):</label>
+                <label for="screenSize" class="form-label">Screen Size (inches): <span class="text-danger">*</span></label>
                 <select id="screenSize" th:field="*{screenSize}" class="form-select" required>
                     <option value="13">13 inches</option>
                     <option value="15">15 inches</option>
@@ -102,12 +102,16 @@
         <h3 class="mt-4">Software</h3>
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="os" class="form-label">Operating System:</label>
-                <input id="os" type="text" th:field="*{os}" class="form-control" required/>
+                <label for="os" class="form-label">Operating System: <span class="text-danger">*</span></label>
+                <select id="os" th:field="*{os}" class="form-control" required>
+                    <option value="Windows">Windows</option>
+                    <option value="Mac">Mac</option>
+                    <option value="Linux">Linux</option>
+                </select>
             </div>
 
             <div class="col-md-6">
-                <label for="firmwareVersion" class="form-label">Firmware Version:</label>
+                <label for="firmwareVersion" class="form-label">Firmware Version: <span class="text-danger">*</span></label>
                 <input id="firmwareVersion" type="text" th:field="*{firmwareVersion}" class="form-control" required/>
             </div>
         </div>
@@ -122,7 +126,7 @@
         <!-- Assigned Employee -->
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="employeeId" class="form-label">Assigned Employee:</label>
+                <label for="employeeId" class="form-label">Assigned Employee: <span class="text-danger">*</span></label>
                 <select id="employeeId" th:field="*{employeeId}" class="form-select" required>
                     <option value="0">Unassigned</option>
                     <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.fullName}"></option>

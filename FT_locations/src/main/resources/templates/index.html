@@ -13,40 +13,87 @@
     <a th:href="@{/laptops/newLaptop}" class="btn btn-primary mb-3">Add New Laptop</a>
 
     <!-- Sorting and filter form -->
-    <form th:action="@{/laptops/export/download}" method="get" class="mb-4">
+    <form th:action="@{/laptops/export/download}" method="get" class="mb-3">
         <div class="row">
-            <div class="col-md-3">
-                <label for="orderBy" class="form-label">Sort By:</label>
-                <select id="orderBy" name="orderBy" class="form-select">
-                    <option value="brand">Brand</option>
-                    <option value="model">Model</option>
-                    <option value="price">Price</option>
-                    <option value="purchasedAt">Purchase Date</option>
-                </select>
+            <div class="col-md-2">
+                <label>
+                    <select name="orderBy" class="form-select">
+                        <option value="" disabled selected>Order by</option>
+                        <option value="brand">Brand</option>
+                        <option value="model">Model</option>
+                        <option value="price">Price</option>
+                        <option value="purchasedAt">Purchase Date</option>
+                    </select>
+                </label>
             </div>
 
-            <div class="col-md-3">
-                <label for="orderMode" class="form-label">Order:</label>
-                <select id="orderMode" name="orderMode" class="form-select">
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
-                </select>
+            <div class="col-md-2">
+                <label>
+                    <select name="orderMode" class="form-select">
+                        <option value="" disabled selected>Order mode</option>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </label>
             </div>
 
-            <div class="col-md-3">
-                <label for="status" class="form-label">Status:</label>
-                <select id="status" name="status" class="form-select">
-                    <option value="">All</option>
-                    <option value="AVAILABLE">Available</option>
-                    <option value="ASSIGNED">Assigned</option>
-                    <option value="REPAIRING">In-Repair</option>
-                    <option value="DECOMMISSIONED">De-commissioned</option>
-                </select>
+            <div class="col-md-2">
+                <label>
+                    <select name="status" class="form-select">
+                        <option value="" disabled selected>Status filter</option>
+                        <option value="">All</option>
+                        <option value="AVAILABLE">Available</option>
+                        <option value="ASSIGNED">Assigned</option>
+                        <option value="REPAIRING">In-Repair</option>
+                        <option value="DECOMMISSIONED">De-commissioned</option>
+                    </select>
+                </label>
             </div>
 
-            <div class="col-md-3 d-flex align-items-end">
+            <div class="col-md-2 d-flex align-items-end">
                 <input type="hidden" name="format" value="csv">
                 <button type="submit" class="btn btn-success">Export CSV</button>
+            </div>
+        </div>
+    </form>
+    <h2 class="mb-4">All Laptops</h2>
+    <form action="/laptops" method="get">
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label>
+                    <select name="orderBy" class="form-select">
+                        <option value="" disabled selected>Order by</option>
+                        <option value="brand">Brand</option>
+                        <option value="model">Model</option>
+                        <option value="status">Status</option>
+                        <option value="price">Price</option>
+                        <option value="employee">Assigned Employee</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <label>
+                    <select name="orderMode" class="form-select">
+                        <option value="" disabled selected>Order mode</option>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <label>
+                    <select name="status" class="form-select">
+                        <option value="" disabled selected>Status filter</option>
+                        <option value="">All</option>
+                        <option value="AVAILABLE">Available</option>
+                        <option value="ASSIGNED">Assigned</option>
+                        <option value="REPAIRING">In-Repair</option>
+                        <option value="DECOMMISSIONED">De-commissioned</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Sort</button>
             </div>
         </div>
     </form>
