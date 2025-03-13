@@ -57,7 +57,7 @@
 ---
 
 # Installation Mac (I have only tested setup on windows)
-1) git clone https://github.com/Cpasley096/FT_locations_test.git
+1) git clone https://github.com/Cpasley096/FT_locations_laptop_inventory.git
 2) cd into FT_locations (Must be in directory that has the pom.xml file)
 3) Install Java SDK 11+
 4) Install Maven using Homebrew:
