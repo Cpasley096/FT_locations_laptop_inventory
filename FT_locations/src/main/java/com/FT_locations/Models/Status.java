@@ -2,7 +2,6 @@ package com.FT_locations.Models;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 public enum Status {

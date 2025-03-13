@@ -55,7 +55,7 @@ class LaptopControllerTest {
         when(laptopService.getLaptop(1)).thenReturn(laptop);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/laptops/1"))
-                .andExpect(status().isOk())  // Expect HTTP 200 OK
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("laptop_details"))  // Expect Thymeleaf view
                 .andExpect(MockMvcResultMatchers.model().attributeExists("laptop"))  // Ensure model has 'laptop' attribute
                 .andExpect(MockMvcResultMatchers.model().attribute("laptop", laptop));  // Check model attribute
@@ -70,7 +70,6 @@ class LaptopControllerTest {
         laptop.setModel("XPS 15");
         laptop.setStatus(Status.AVAILABLE);
 
-        // Mock service to return a non-null laptop with an ID
         when(laptopService.createLaptop(any(LaptopDTO.class))).thenReturn(laptop);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/laptops/save")
@@ -79,7 +78,7 @@ class LaptopControllerTest {
                         .param("model", "XPS 15")
                         .param("price", "1500")
                         .param("status", "AVAILABLE"))
-                .andExpect(status().is3xxRedirection()) // Expect redirect
+                .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1")); // Ensure correct redirection
     }
 
@@ -97,5 +96,4 @@ class LaptopControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/laptops/1"));
     }
-
 }

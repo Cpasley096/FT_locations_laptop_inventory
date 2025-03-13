@@ -1,7 +1,7 @@
 package com.FT_locations.Services.iServices;
 
 import com.FT_locations.DTO.LaptopDTO;
-import com.FT_locations.Models.Args;
+import com.FT_locations.DTO.Args;
 import com.FT_locations.Models.Laptop;
 import jakarta.servlet.http.HttpServletResponse;
 

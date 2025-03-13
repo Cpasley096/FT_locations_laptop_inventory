@@ -1,5 +1,6 @@
-package com.FT_locations.Models;
+package com.FT_locations.DTO;
 
+import com.FT_locations.Models.Status;
 
 public record Args(String orderBy, String orderMode, Status status, String format) {
     public Args {

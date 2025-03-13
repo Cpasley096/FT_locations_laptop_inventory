@@ -3,7 +3,7 @@ package com.FT_locations.Controller;
 import com.FT_locations.DTO.*;
 import com.FT_locations.Models.Employee;
 import com.FT_locations.Models.Laptop;
-import com.FT_locations.Models.Args;
+import com.FT_locations.DTO.Args;
 import com.FT_locations.Models.Status;
 import com.FT_locations.Services.iServices.EmployeeService;
 import com.FT_locations.Services.iServices.LaptopService;
