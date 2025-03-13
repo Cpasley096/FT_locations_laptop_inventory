@@ -54,7 +54,9 @@
    ```
    http://localhost:8080
    ```
-# Installation Mac
+---
+
+# Installation Mac (I have only tested setup on windows)
 1) git clone https://github.com/Cpasley096/FT_locations_test.git
 2) cd into FT_locations (Must be in directory that has the pom.xml file)
 3) Install Java SDK 11+
@@ -65,3 +67,49 @@
 6) Run `mvn clean install` (this will download dependencies and build the project)
 7) Run `mvn spring-boot:run` (application will run on port 8080)
 8) Open http://localhost:8080/ in your browser
+
+---
+
+## **Additional information**
+### **1. Data Loading**  
+- Sample data is loaded into the database once the application starts via `DataLoader.java`.  
+- The application uses an **H2 in-memory database**, meaning data is lost upon restart unless reloaded by `DataLoader.java`.  
+
+### **2. H2 Database (In-Memory Database)**  
+- **Why?** It’s lightweight and great for development/testing.  
+- **Limitation:** No persistent storage—ideal for demos but not production.  
+
+### **3. Thymeleaf for Server-Side Rendering**  
+- The front-end uses **Thymeleaf**, a server-side templating engine that renders HTML before being sent to the browser.  
+- **Implication:** The controller returns fully-rendered pages instead of JSON responses.  
+
+---
+
+## **Potential Improvements for Production use** 
+### **1. Use a Persistent Relational Database**  
+Instead of H2:  
+- **PostgreSQL**
+- **MySQL**
+
+### **2. Authentication & Authorisation**  
+- Add a **Login/Sign-Up system** with:  
+  - **Spring Security** for authentication.  
+  - **OAuth2** for token-based authentication.  
+  - **Role-based access control (RBAC)** to secure endpoints.  
+
+### **3. Move Front-End to a Client-Side Framework**  
+Instead of Thymeleaf, use:  
+- **Vue.js** 
+- **React.js** 
+- **Angular** 
+- This allows **dynamic content updates without full-page reloads**.  
+
+### **4. RESTful API**  
+- Convert the controller logic to return **JSON responses** instead of HTML.  
+- Implement a **RESTful API** with endpoints for CRUD operations.  
+- Use **Spring Boot with Swagger/OpenAPI** for API documentation.  
+
+### **5. Containerisation & Deployment**  
+- **Docker**: Package the application and database in containers.  
+- **CI/CD**: Automate testing and deployments with **GitHub Actionss**.  
+- **Cloud Deployment**: Deploy on **AWS, Azure, or Google Cloud**.  
