@@ -2,7 +2,7 @@
 
 1. Clone the Repository
    ```
-   git clone https://github.com/Cpasley096/FT_locations_test.git
+   git clone https://github.com/Cpasley096/FT_locations_laptop_inventory.git
    ```
 
 2. Navigate to the Project Directory
